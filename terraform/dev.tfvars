@@ -26,3 +26,5 @@ data_factory_name = "dfjonathanlab01"
 # my_ip_address      → se calcula automático en el pipeline
 
 # pipeline trigger
+
+# retry role assignment
