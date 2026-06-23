@@ -1,0 +1,30 @@
+# ── Terraform ─────────────────────────────────────────────────
+# Archivos de estado local (NUNCA subir al repo)
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Plan binario
+tfplan
+
+# Variables con secrets (usar dev.tfvars que ya no tiene passwords)
+*.auto.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# ── Credenciales y logs ───────────────────────────────────────
+*.env
+.env
+deploy-*.log
+
+# ── Sistema operativo ─────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Editores ──────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
