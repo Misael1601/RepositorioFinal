@@ -109,3 +109,5 @@ cd terraform
 terraform destroy -var-file=dev.tfvars \
   -var="my_ip_address=$(curl -s https://api.ipify.org)"
 ```
+
+<!-- trigger pipeline -->
