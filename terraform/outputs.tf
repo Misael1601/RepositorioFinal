@@ -40,7 +40,7 @@ output "sql_database_name" {
 
 output "data_factory_name" {
   description = "Nombre del Azure Data Factory"
-  value       = azurerm_data_factory.adf.name   # corregido: faltaba .name
+  value       = azurerm_data_factory.adf.name # corregido: faltaba .name
 }
 
 output "data_factory_identity" {

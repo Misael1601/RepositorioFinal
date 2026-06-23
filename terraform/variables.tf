@@ -41,13 +41,13 @@ variable "sql_server_name" {
 variable "sql_admin_user" {
   description = "Usuario administrador del SQL Server"
   type        = string
-  sensitive   = true   # no se imprime en logs del pipeline
+  sensitive   = true # no se imprime en logs del pipeline
 }
 
 variable "sql_admin_password" {
   description = "Contraseña del administrador SQL (pasar via TF_VAR o secret)"
   type        = string
-  sensitive   = true   # nunca se muestra en outputs ni logs
+  sensitive   = true # nunca se muestra en outputs ni logs
 }
 
 variable "sql_database_name" {

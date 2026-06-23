@@ -18,10 +18,10 @@ resource "azurerm_storage_account" "adls" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   account_kind             = "StorageV2"
-  is_hns_enabled           = true   # Activa Data Lake Gen2
+  is_hns_enabled           = true # Activa Data Lake Gen2
 
   # Buenas prácticas de seguridad
-  min_tls_version          = "TLS1_2"
+  min_tls_version                 = "TLS1_2"
   allow_nested_items_to_be_public = false
 
   tags = {
@@ -101,7 +101,7 @@ resource "azurerm_data_factory" "adf" {
   resource_group_name = azurerm_resource_group.rg.name
 
   identity {
-    type = "SystemAssigned"   # ADF obtiene su propia identidad en Azure AD
+    type = "SystemAssigned" # ADF obtiene su propia identidad en Azure AD
   }
 
   tags = {
