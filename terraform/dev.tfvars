@@ -24,3 +24,5 @@ data_factory_name = "dfjonathanlab01"
 # sql_admin_user     → GitHub Secret: TF_VAR_SQL_ADMIN_USER
 # sql_admin_password → GitHub Secret: TF_VAR_SQL_ADMIN_PASSWORD
 # my_ip_address      → se calcula automático en el pipeline
+
+# pipeline trigger
