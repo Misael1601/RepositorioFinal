@@ -5,16 +5,15 @@ Despliega infraestructura de datos en Azure usando Terraform con CI/CD en GitHub
 ## Infraestructura que despliega
 
 ```
-Resource Group: rg-jonathan-adlg2
-├── Storage Account ADLS Gen2 (staccjona1)
+Resource Group: rg-misael-final
+├── Storage Account ADLS Gen2 (staccmisael16)
 │   ├── Filesystem: raw
 │   ├── Filesystem: processed
 │   └── Filesystem: curated
-├── SQL Server (sqjonathan01)
-│   └── Base de datos: db_Dengue
-└── Azure Data Factory (dfjonathanlab01)
+├── SQL Server (sqjona01)
+│   └── Base de datos: Online_Retail
+└── Azure Data Factory (dfmisael01)
     └── Role: Storage Blob Data Contributor → ADLS
-```
 
 ## Estructura del repositorio
 
@@ -50,7 +49,7 @@ chmod +x scripts/setup-azure.sh
 
 El script crea automáticamente:
 - Resource Group + Storage Account para el estado de Terraform
-- App Registration con Federated Credentials (OIDC)
+- Managed Identity con Federated Credentials (OIDC)
 - Imprime en pantalla los 7 secrets que debes agregar en GitHub
 
 ## Paso 3 — Configurar secrets en GitHub
@@ -77,8 +76,9 @@ En **Settings → Environments** crear `production` y agregar *Required reviewer
 cd terraform
 
 # Exportar variables sensibles
-export TF_VAR_sql_admin_user="admon140972"
-export TF_VAR_sql_admin_password="TuPasswordSegura123!"
+export TF_VAR_sql_admin_user="<tu_usuario_sql>"
+export TF_VAR_sql_admin_password="<tu_contraseña>"
+export TF_VAR_alert_email="tu@correo.com"
 
 terraform init \
   -backend-config="resource_group_name=rg-tfstate" \
@@ -110,4 +110,4 @@ terraform destroy -var-file=dev.tfvars \
   -var="my_ip_address=$(curl -s https://api.ipify.org)"
 ```
 
-<!-- trigger pipeline -->
+
