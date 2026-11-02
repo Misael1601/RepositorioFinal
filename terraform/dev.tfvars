@@ -1,30 +1,19 @@
 # ============================================================
-# dev.tfvars — Valores para el ambiente dev
-# ⚠️  NUNCA incluir passwords ni secrets aquí.
-#     Las variables sensibles se pasan como:
-#       - GitHub Secrets → variables de entorno TF_VAR_*
-#       - Local: export TF_VAR_sql_admin_password="tu_pass"
+# dev.tfvars — Valores del ambiente dev. NUNCA secrets aquí.
+# Sensibles: GitHub Secrets (SQL_ADMIN_*) y Variables (MY_IP, ALERT_EMAIL)
 # ============================================================
 
-# Infraestructura base
-resource_group_name  = "rg-jonathan-adlg2"
-location             = "West US"
-storage_account_name = "staccjona1"
+resource_group_name  = "rg-misael-final"
+location             = "westus"
+storage_account_name = "staccmisael16"
 environment          = "dev"
 project_name         = "datalake-lab"
 
-# SQL Server
-sql_server_name   = "sqjonathan01"
-sql_database_name = "db_Dengue"
+sql_server_name   = "sqjona01"
+sql_database_name = "Online_Retail"
+sql_sku_name      = "S0"
 
-# Data Factory
-data_factory_name = "dfjonathanlab01"
+data_factory_name = "dfmisael01"
 
-# ── Variables sensibles (NO van aquí) ────────────────────────
-# sql_admin_user     → GitHub Secret: TF_VAR_SQL_ADMIN_USER
-# sql_admin_password → GitHub Secret: TF_VAR_SQL_ADMIN_PASSWORD
-# my_ip_address      → se calcula automático en el pipeline
-
-# pipeline trigger
-
-# retry role assignment
+budget_amount         = 20
+backup_retention_days = 7

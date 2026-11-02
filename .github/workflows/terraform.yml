@@ -10,13 +10,13 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write      # requerido para autenticación OIDC con Azure
+  id-token: write      # OIDC con Azure
   contents: read
-  pull-requests: write # para comentar el plan en el PR
+  pull-requests: write # comentar el plan en el PR
 
 env:
-  TF_VERSION:   "1.9.8"
-  WORKING_DIR:  terraform
+  TF_VERSION:  "1.14.9"
+  WORKING_DIR: terraform
 
   # Credenciales OIDC (sin passwords almacenadas)
   ARM_CLIENT_ID:       ${{ secrets.AZURE_CLIENT_ID }}
@@ -24,9 +24,11 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   ARM_USE_OIDC:        "true"
 
-  # Variables sensibles de Terraform (nunca van en dev.tfvars)
+  # Variables de Terraform que no van en dev.tfvars
   TF_VAR_sql_admin_user:     ${{ secrets.SQL_ADMIN_USER }}
   TF_VAR_sql_admin_password: ${{ secrets.SQL_ADMIN_PASSWORD }}
+  TF_VAR_my_ip_address:      ${{ vars.MY_IP }}
+  TF_VAR_alert_email:        ${{ vars.ALERT_EMAIL }}
 
 jobs:
   plan:
@@ -59,35 +61,33 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Get runner public IP
-        id: ip
-        run: echo "address=$(curl -s https://api.ipify.org)" >> $GITHUB_OUTPUT
-
       - name: Terraform Plan
         id: plan
-        run: >
-          terraform plan
-          -var-file=dev.tfvars
-          -var="my_ip_address=${{ steps.ip.outputs.address }}"
-          -out=tfplan
-          -no-color
+        continue-on-error: true   # para que el comentario salga aunque falle
+        run: terraform plan -var-file=dev.tfvars -out=tfplan -no-color
 
       - name: Comment Plan on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
+        env:
+          PLAN: ${{ steps.plan.outputs.stdout }}
+          PLAN_ERR: ${{ steps.plan.outputs.stderr }}
+          PLAN_OUTCOME: ${{ steps.plan.outcome }}
         with:
           script: |
-            const output = `#### Terraform Plan 📖
-            \`\`\`
-            ${{ steps.plan.outputs.stdout }}
-            \`\`\`
-            *Workflow: \`${{ github.workflow }}\`, Commit: \`${{ github.sha }}\`*`;
-            github.rest.issues.createComment({
+            const fence = '`'.repeat(3);
+            const text = (process.env.PLAN || process.env.PLAN_ERR || '').slice(0, 60000);
+            const body = `#### Terraform Plan: ${process.env.PLAN_OUTCOME}\n${fence}\n${text}\n${fence}\n*Commit: ${context.sha}*`;
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: output
+              body
             });
+
+      - name: Fail if plan failed
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
 
       - name: Upload Plan Artifact
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -102,7 +102,7 @@ jobs:
     needs: plan
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
-    environment: production   # requiere aprobación manual en Settings > Environments
+    environment: production2   # requiere aprobación manual
     defaults:
       run:
         working-directory: ${{ env.WORKING_DIR }}
