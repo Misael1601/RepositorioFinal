@@ -17,3 +17,5 @@ data_factory_name = "dfmisael01"
 
 budget_amount         = 20
 backup_retention_days = 7
+
+# verificacion del pipeline con policies y lock activos
